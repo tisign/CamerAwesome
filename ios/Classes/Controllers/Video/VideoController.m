@@ -47,6 +47,38 @@ FourCharCode const videoFormat = kCVPixelFormatType_32BGRA;
   if (_options && _options.fps != nil && _options.fps > 0) {
     [self adjustCameraFPS:_options.fps];
   }
+
+  // Set the video stabilization mode
+  if (options.stabilizationMode != nil) {
+    AVCaptureVideoStabilizationMode stabilizationMode = [self convertStabilizationMode:options.stabilizationMode];
+    if ([device.activeFormat isVideoStabilizationModeSupported:stabilizationMode]) {
+      if ([device lockForConfiguration:nil]) {
+        device.activeVideoStabilizationMode = stabilizationMode;
+        [device unlockForConfiguration];
+      }
+    }
+  }
+
+  // Set the color space
+  if (options.colorSpace != nil) {
+    AVCaptureColorSpace colorSpace = [self convertColorSpace:options.colorSpace];
+    if ([device.activeFormat isVideoStabilizationModeSupported:colorSpace]) {
+      if ([device lockForConfiguration:nil]) {
+        // Check if the selected codec supports the desired color space
+        if (options.colorSpace == CupertinoColorSpaceAppleLog &&
+            ![self isProResCodec:options.codec]) {
+          completion([FlutterError errorWithCode:@"COLOR_SPACE_NOT_SUPPORTED"
+                                       message:@"Apple Log color space is only supported with ProRes codecs"
+                                       details:nil]);
+          return;
+        }
+
+        device.activeColorSpace = colorSpace;
+        [device unlockForConfiguration];
+      }
+    }
+  }
+
 }
 
 /// Stop recording video
@@ -395,6 +427,46 @@ FourCharCode const videoFormat = kCVPixelFormatType_32BGRA;
   }
   
   return size;
+}
+
+- (AVCaptureVideoStabilizationMode)convertStabilizationMode:(CupertinoStabilizationMode)mode {
+  switch (mode) {
+    case CupertinoStabilizationModeOff:
+      return AVCaptureVideoStabilizationModeOff;
+    case CupertinoStabilizationModeStandard:
+      return AVCaptureVideoStabilizationModeStandard;
+    case CupertinoStabilizationModeCinematic:
+      return AVCaptureVideoStabilizationModeCinematic;
+    case CupertinoStabilizationModeCinematicExtended:
+      return AVCaptureVideoStabilizationModeCinematicExtended;
+    case CupertinoStabilizationModePreviewOptimized:
+      return AVCaptureVideoStabilizationModePreviewOptimized;
+    case CupertinoStabilizationModeCinematicExtendedEnhanced:
+      return AVCaptureVideoStabilizationModeCinematicExtendedEnhanced;
+    case CupertinoStabilizationModeAuto:
+      return AVCaptureVideoStabilizationModeAuto;
+  }
+}
+
+- (AVCaptureColorSpace)convertColorSpace:(CupertinoColorSpace)colorSpace {
+  switch (colorSpace) {
+    case CupertinoColorSpacesRGB:
+      return AVCaptureColorSpacesRGB;
+    case CupertinoColorSpaceP3_D65:
+      return AVCaptureColorSpaceP3_D65;
+    case CupertinoColorSpaceHLG_BT2020:
+      return AVCaptureColorSpaceHLG_BT2020;
+    case CupertinoColorSpaceAppleLog:
+      return AVCaptureColorSpaceAppleLog;
+  }
+}
+
+- (BOOL)isProResCodec:(CupertinoCodecType)codec {
+  return codec == CupertinoCodecTypeAppleProRes4444 ||
+         codec == CupertinoCodecTypeAppleProRes422 ||
+         codec == CupertinoCodecTypeAppleProRes422HQ ||
+         codec == CupertinoCodecTypeAppleProRes422LT ||
+         codec == CupertinoCodecTypeAppleProRes422Proxy;
 }
 
 # pragma mark - Setter

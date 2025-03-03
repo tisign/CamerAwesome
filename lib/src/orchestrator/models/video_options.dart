@@ -54,6 +54,43 @@ enum CupertinoFileType {
   type3GPP2,
 }
 
+enum CupertinoColorSpace {
+  /// The sRGB color space.
+  sRGB,
+
+  /// The P3 D65 color space.
+  P3_D65,
+
+  /// The Rec. 2020 color space.
+  HLG_BT2020,
+
+  /// The Rec. 709 color space.
+  appleLog,
+}
+
+enum CupertinoStabilizationMode {
+  /// The standard stabilization mode.
+  off,
+
+  /// The standard stabilization mode.
+  standard,
+
+  /// The cinematic stabilization mode.
+  cinematic,
+
+  /// The cinematic stabilization mode with extended properties.
+  cinematicExtended,
+
+  /// The cinematic stabilization mode with preview optimized properties.
+  previewOptimized,
+
+  /// The cinematic stabilization mode with enhanced properties.
+  cinematicExtendedEnhanced,
+
+  /// The auto stabilization mode.
+  auto,
+}
+
 class CupertinoVideoOptions {
   /// The video codec to use when recording a video.
   CupertinoVideoCodec codec;
@@ -65,10 +102,16 @@ class CupertinoVideoOptions {
 
   int? fps;
 
+  CupertinoColorSpace? colorSpace;
+
+  CupertinoStabilizationMode? stabilizationMode;
+
   CupertinoVideoOptions({
     this.codec = CupertinoVideoCodec.h264,
     this.fileType = CupertinoFileType.quickTimeMovie,
     this.fps,
+    this.colorSpace,
+    this.stabilizationMode,
   });
 
   Map<String, dynamic> toMap() {
@@ -76,6 +119,8 @@ class CupertinoVideoOptions {
       'codec': codec.name,
       'fileType': fileType.name,
       'fps': fps,
+      'colorSpace': colorSpace?.name,
+      'stabilizationMode': stabilizationMode?.name,
     };
   }
 }

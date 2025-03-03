@@ -112,6 +112,18 @@ enum CupertinoCodecType {
   appleProRes422Proxy,
 }
 
+enum CupertinoColorSpace { sRGB, P3_D65, HLG_BT2020, appleLog }
+
+enum CupertinoStabilizationMode {
+  off,
+  standard,
+  cinematic,
+  cinematicExtended,
+  previewOptimized,
+  cinematicExtendedEnhanced,
+  auto,
+}
+
 class CupertinoVideoOptions {
   /// Specify video file type, defaults to [AVFileTypeQuickTimeMovie].
   final CupertinoFileType? fileType;
@@ -122,10 +134,18 @@ class CupertinoVideoOptions {
   /// Specify video fps, defaults to [30].
   final int? fps;
 
+  /// Specify video color space, defaults to [sRGB].
+  final CupertinoColorSpace? colorSpace;
+
+  /// Specify video stabilization mode, defaults to [auto].
+  final CupertinoStabilizationMode? stabilizationMode;
+
   CupertinoVideoOptions({
     this.fileType,
     this.codec,
     this.fps,
+    this.colorSpace,
+    this.stabilizationMode,
   });
 }
 
