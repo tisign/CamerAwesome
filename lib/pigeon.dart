@@ -262,8 +262,8 @@ class CupertinoVideoOptions {
   CupertinoVideoOptions({
     this.fileType,
     this.codec,
-    this.colorSpace,
     this.fps,
+    this.colorSpace,
   });
 
   /// Specify video file type, defaults to [AVFileTypeQuickTimeMovie].
@@ -272,18 +272,18 @@ class CupertinoVideoOptions {
   /// Specify video codec, defaults to [AVVideoCodecTypeH264].
   CupertinoCodecType? codec;
 
-  /// Specify video color space, defaults to [AVVideoColorSpaceSRGB].
-  CupertinoColorSpace? colorSpace;
-
   /// Specify video fps, defaults to [30].
   int? fps;
+
+  /// Specify video color space, defaults to [AVVideoColorSpaceSRGB].
+  CupertinoColorSpace? colorSpace;
 
   Object encode() {
     return <Object?>[
       fileType,
       codec,
-      colorSpace,
       fps,
+      colorSpace,
     ];
   }
 
@@ -292,8 +292,8 @@ class CupertinoVideoOptions {
     return CupertinoVideoOptions(
       fileType: result[0] as CupertinoFileType?,
       codec: result[1] as CupertinoCodecType?,
-      colorSpace: result[2] as CupertinoColorSpace?,
-      fps: result[3] as int?,
+      fps: result[2] as int?,
+      colorSpace: result[3] as CupertinoColorSpace?,
     );
   }
 }

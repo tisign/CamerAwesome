@@ -133,17 +133,17 @@ class CupertinoVideoOptions {
   /// Specify video codec, defaults to [AVVideoCodecTypeH264].
   final CupertinoCodecType? codec;
 
-  /// Specify video color space, defaults to [AVVideoColorSpaceSRGB].
-  final CupertinoColorSpace? colorSpace;
-
   /// Specify video fps, defaults to [30].
   final int? fps;
+
+  /// Specify video color space, defaults to [AVVideoColorSpaceSRGB].
+  final CupertinoColorSpace? colorSpace;
 
   CupertinoVideoOptions({
     this.fileType,
     this.codec,
-    this.colorSpace,
     this.fps,
+    this.colorSpace,
   });
 }
 

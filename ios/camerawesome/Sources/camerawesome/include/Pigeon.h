@@ -235,16 +235,16 @@ typedef NS_ENUM(NSUInteger, AnalysisRotation) {
 @interface CupertinoVideoOptions : NSObject
 + (instancetype)makeWithFileType:(nullable CupertinoFileTypeBox *)fileType
     codec:(nullable CupertinoCodecTypeBox *)codec
-    colorSpace:(nullable CupertinoColorSpaceBox *)colorSpace
-    fps:(nullable NSNumber *)fps;
+    fps:(nullable NSNumber *)fps
+    colorSpace:(nullable CupertinoColorSpaceBox *)colorSpace;
 /// Specify video file type, defaults to [AVFileTypeQuickTimeMovie].
 @property(nonatomic, strong, nullable) CupertinoFileTypeBox * fileType;
 /// Specify video codec, defaults to [AVVideoCodecTypeH264].
 @property(nonatomic, strong, nullable) CupertinoCodecTypeBox * codec;
-/// Specify video color space, defaults to [AVVideoColorSpaceSRGB].
-@property(nonatomic, strong, nullable) CupertinoColorSpaceBox * colorSpace;
 /// Specify video fps, defaults to [30].
 @property(nonatomic, strong, nullable) NSNumber * fps;
+/// Specify video color space, defaults to [AVVideoColorSpaceSRGB].
+@property(nonatomic, strong, nullable) CupertinoColorSpaceBox * colorSpace;
 @end
 
 @interface PigeonSensorTypeDevice : NSObject

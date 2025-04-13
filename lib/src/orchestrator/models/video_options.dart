@@ -83,24 +83,24 @@ class CupertinoVideoOptions {
   /// **WARNING:** Be sure to use the correct file type extension for the video!
   CupertinoFileType fileType;
 
+  int? fps;
+
   /// The color space to use when recording a video.
   CupertinoColorSpace? colorSpace;
-
-  int? fps;
 
   CupertinoVideoOptions({
     this.codec = CupertinoVideoCodec.h264,
     this.fileType = CupertinoFileType.quickTimeMovie,
-    this.colorSpace,
     this.fps,
+    this.colorSpace,
   });
 
   Map<String, dynamic> toMap() {
     return {
       'codec': codec.name,
       'fileType': fileType.name,
-      'colorSpace': colorSpace?.name,
       'fps': fps,
+      'colorSpace': colorSpace?.name,
     };
   }
 }

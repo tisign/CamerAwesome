@@ -337,27 +337,27 @@ data class CupertinoVideoOptions (
   val fileType: CupertinoFileType? = null,
   /** Specify video codec, defaults to [AVVideoCodecTypeH264]. */
   val codec: CupertinoCodecType? = null,
-  /** Specify video color space, defaults to [AVVideoColorSpaceSRGB]. */
-  val colorSpace: CupertinoColorSpace? = null,
   /** Specify video fps, defaults to [30]. */
-  val fps: Long? = null
+  val fps: Long? = null,
+  /** Specify video color space, defaults to [AVVideoColorSpaceSRGB]. */
+  val colorSpace: CupertinoColorSpace? = null
 )
  {
   companion object {
     fun fromList(pigeonVar_list: List<Any?>): CupertinoVideoOptions {
       val fileType = pigeonVar_list[0] as CupertinoFileType?
       val codec = pigeonVar_list[1] as CupertinoCodecType?
-      val colorSpace = pigeonVar_list[2] as CupertinoColorSpace?
-      val fps = pigeonVar_list[3].let { num -> if (num is Int) num.toLong() else num as Long? }
-      return CupertinoVideoOptions(fileType, codec, colorSpace, fps)
+      val fps = pigeonVar_list[2].let { num -> if (num is Int) num.toLong() else num as Long? }
+      val colorSpace = pigeonVar_list[3] as CupertinoColorSpace?
+      return CupertinoVideoOptions(fileType, codec, fps, colorSpace)
     }
   }
   fun toList(): List<Any?> {
     return listOf(
       fileType,
       codec,
-      colorSpace,
       fps,
+      colorSpace,
     )
   }
 }
