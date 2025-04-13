@@ -26,6 +26,16 @@ FourCharCode const videoFormat = kCVPixelFormatType_32BGRA;
 - (void)recordVideoAtPath:(NSString *)path captureDevice:(AVCaptureDevice *)device orientation:(NSInteger)orientation audioSetupCallback:(OnAudioSetup)audioSetupCallback videoWriterCallback:(OnVideoWriterSetup)videoWriterCallback options:(CupertinoVideoOptions *)options quality:(VideoRecordingQuality)quality completion:(nonnull void (^)(FlutterError * _Nullable))completion {
   _options = options;
   _recordingQuality = quality;
+
+  // Get the codec type first
+  AVVideoCodecType codecType = [self getBestCodecTypeAccordingOptions:options];
+  
+  // Configure color space with respect to the codec
+  if (options && options != (id)[NSNull null] && options.colorSpace != CupertinoColorSpaceSRGB) {
+    [self configureColorSpaceForRecording:device 
+                               colorSpace:options.colorSpace
+                                    codec:codecType];
+  }
   
   // Create audio & video writer
   if (![self setupWriterForPath:path audioSetupCallback:audioSetupCallback options:options completion:completion]) {
@@ -395,6 +405,221 @@ FourCharCode const videoFormat = kCVPixelFormatType_32BGRA;
   }
   
   return size;
+}
+
+// Convert CupertinoColorSpace to AVCaptureColorSpace
+- (AVCaptureColorSpace)convertToAVCaptureColorSpace:(CupertinoColorSpace)colorSpace {
+  switch (colorSpace) {
+    case CupertinoColorSpaceP3_D65:
+      return AVCaptureColorSpace_P3_D65;
+    case CupertinoColorSpaceHlg_BT2020:
+      return AVCaptureColorSpace_HLG_BT2020;
+    case CupertinoColorSpaceAppleLog:
+      if (@available(iOS 16.0, *)) {
+        return AVCaptureColorSpace_appleLog;
+      } else {
+        return AVCaptureColorSpace_sRGB;
+      }
+    case CupertinoColorSpaceSRGB:
+    default:
+      return AVCaptureColorSpace_sRGB;
+  }
+}
+
+// Check if a device format supports a specific color space
+- (BOOL)deviceFormat:(AVCaptureDeviceFormat *)format supportsColorSpace:(AVCaptureColorSpace)colorSpace {
+  if (@available(iOS 10.0, *)) {
+    NSArray<NSNumber *> *supportedColorSpaces = [format supportedColorSpaces];
+    for (NSNumber *supportedSpace in supportedColorSpaces) {
+      if ([supportedSpace intValue] == colorSpace) {
+        return YES;
+      }
+    }
+  }
+  return NO;
+}
+
+// Configure color space for recording
+- (void)configureColorSpaceForRecording:(AVCaptureDevice *)device 
+                             colorSpace:(CupertinoColorSpace)colorSpace
+                                  codec:(AVVideoCodecType)codecType {
+  if (colorSpace == nil) {
+    // Use default if not specified
+    return;
+  }
+  
+  AVCaptureColorSpace avColorSpace = [self convertToAVCaptureColorSpace:colorSpace];
+  
+  // Check if the device format supports the color space
+  if (![self deviceFormat:device.activeFormat supportsColorSpace:avColorSpace]) {
+    // Find alternative color space but KEEP the codec
+    avColorSpace = [self findCompatibleColorSpace:device.activeFormat 
+                                originalColorSpace:avColorSpace
+                                            codec:codecType];
+  } else {
+    // Check codec compatibility with color space
+    if (![self isColorSpaceCompatibleWithCodec:avColorSpace codec:codecType]) {
+      // If incompatible, find a compatible color space
+      avColorSpace = [self findCompatibleColorSpaceForCodec:device.activeFormat codec:codecType];
+    }
+  }
+  
+  // Set the color space
+  NSError *error = nil;
+  if ([device lockForConfiguration:&error]) {
+    device.activeColorSpace = avColorSpace;
+    [device unlockForConfiguration];
+  } else {
+    NSLog(@"Failed to set color space: %@", error);
+  }
+}
+
+- (AVVideoCodecType)ensureCodecCompatibilityWithColorSpace:(AVVideoCodecType)codec colorSpace:(CupertinoColorSpace)colorSpace {
+  if (colorSpace == CupertinoColorSpaceAppleLog) {
+    // appleLog requires ProRes
+    if (!([codec isEqualToString:AVVideoCodecTypeAppleProRes4444] ||
+          [codec isEqualToString:AVVideoCodecTypeAppleProRes422] ||
+          [codec isEqualToString:AVVideoCodecTypeAppleProRes422HQ] ||
+          [codec isEqualToString:AVVideoCodecTypeAppleProRes422LT] ||
+          [codec isEqualToString:AVVideoCodecTypeAppleProRes422Proxy])) {
+      return AVVideoCodecTypeAppleProRes422HQ;
+    }
+  } else if (colorSpace == CupertinoColorSpaceHlg_BT2020) {
+    // HLG works best with HEVC
+    if (![codec isEqualToString:AVVideoCodecTypeHEVC]) {
+      return AVVideoCodecTypeHEVC;
+    }
+  }
+  
+  return codec;
+}
+
+// Check if a color space is compatible with a codec
+- (BOOL)isColorSpaceCompatibleWithCodec:(AVCaptureColorSpace)colorSpace codec:(AVVideoCodecType)codec {
+  // appleLog is only compatible with ProRes codecs
+  if (colorSpace == AVCaptureColorSpace_appleLog) {
+    return [codec isEqualToString:AVVideoCodecTypeAppleProRes4444] ||
+           [codec isEqualToString:AVVideoCodecTypeAppleProRes422] ||
+           [codec isEqualToString:AVVideoCodecTypeAppleProRes422HQ] ||
+           [codec isEqualToString:AVVideoCodecTypeAppleProRes422LT] ||
+           [codec isEqualToString:AVVideoCodecTypeAppleProRes422Proxy];
+  }
+  
+  // HLG_BT2020 works best with HEVC but can work with others
+  // We'll allow any codec with HLG
+  
+  return YES;  // Other combinations are compatible
+}
+
+// Find a compatible color space for device format while respecting codec
+- (AVCaptureColorSpace)findCompatibleColorSpace:(AVCaptureDeviceFormat *)format 
+                           originalColorSpace:(AVCaptureColorSpace)originalColorSpace
+                                       codec:(AVVideoCodecType)codec {
+  NSArray<NSNumber *> *supportedColorSpaces = [format supportedColorSpaces];
+  BOOL isProResCodec = [codec isEqualToString:AVVideoCodecTypeAppleProRes4444] ||
+                       [codec isEqualToString:AVVideoCodecTypeAppleProRes422] ||
+                       [codec isEqualToString:AVVideoCodecTypeAppleProRes422HQ] ||
+                       [codec isEqualToString:AVVideoCodecTypeAppleProRes422LT] ||
+                       [codec isEqualToString:AVVideoCodecTypeAppleProRes422Proxy];
+  
+  // Original was appleLog
+  if (originalColorSpace == AVCaptureColorSpace_appleLog) {
+    // If it's a ProRes codec, we need to check alternatives for appleLog
+    if (isProResCodec) {
+      // Check for HLG_BT2020 support
+      for (NSNumber *space in supportedColorSpaces) {
+        if ([space intValue] == AVCaptureColorSpace_HLG_BT2020) {
+          return AVCaptureColorSpace_HLG_BT2020;
+        }
+      }
+      
+      // Check for P3_D65 support
+      for (NSNumber *space in supportedColorSpaces) {
+        if ([space intValue] == AVCaptureColorSpace_P3_D65) {
+          return AVCaptureColorSpace_P3_D65;
+        }
+      }
+    } else {
+      // For non-ProRes codecs, appleLog isn't supported anyway
+      // Check other color spaces
+      for (NSNumber *space in supportedColorSpaces) {
+        if ([space intValue] == AVCaptureColorSpace_HLG_BT2020) {
+          return AVCaptureColorSpace_HLG_BT2020;
+        }
+      }
+      
+      for (NSNumber *space in supportedColorSpaces) {
+        if ([space intValue] == AVCaptureColorSpace_P3_D65) {
+          return AVCaptureColorSpace_P3_D65;
+        }
+      }
+    }
+  } 
+  // Original was HLG_BT2020
+  else if (originalColorSpace == AVCaptureColorSpace_HLG_BT2020) {
+    // Check for P3_D65 support
+    for (NSNumber *space in supportedColorSpaces) {
+      if ([space intValue] == AVCaptureColorSpace_P3_D65) {
+        return AVCaptureColorSpace_P3_D65;
+      }
+    }
+  }
+  
+  // Default fallback to sRGB
+  return AVCaptureColorSpace_sRGB;
+}
+
+// Find the best compatible color space for a codec
+- (AVCaptureColorSpace)findCompatibleColorSpaceForCodec:(AVCaptureDeviceFormat *)format codec:(AVVideoCodecType)codec {
+  NSArray<NSNumber *> *supportedColorSpaces = [format supportedColorSpaces];
+  BOOL isProResCodec = [codec isEqualToString:AVVideoCodecTypeAppleProRes4444] ||
+                      [codec isEqualToString:AVVideoCodecTypeAppleProRes422] ||
+                      [codec isEqualToString:AVVideoCodecTypeAppleProRes422HQ] ||
+                      [codec isEqualToString:AVVideoCodecTypeAppleProRes422LT] ||
+                      [codec isEqualToString:AVVideoCodecTypeAppleProRes422Proxy];
+  
+  if (isProResCodec) {
+    // ProRes can work with appleLog if supported
+    if (@available(iOS 16.0, *)) {
+      for (NSNumber *space in supportedColorSpaces) {
+        if ([space intValue] == AVCaptureColorSpace_appleLog) {
+          return AVCaptureColorSpace_appleLog;
+        }
+      }
+    }
+    
+    // Check for HLG_BT2020
+    for (NSNumber *space in supportedColorSpaces) {
+      if ([space intValue] == AVCaptureColorSpace_HLG_BT2020) {
+        return AVCaptureColorSpace_HLG_BT2020;
+      }
+    }
+    
+    // Check for P3_D65
+    for (NSNumber *space in supportedColorSpaces) {
+      if ([space intValue] == AVCaptureColorSpace_P3_D65) {
+        return AVCaptureColorSpace_P3_D65;
+      }
+    }
+  } else {
+    // For non-ProRes codecs
+    // Check for HLG_BT2020 - works especially well with HEVC
+    for (NSNumber *space in supportedColorSpaces) {
+      if ([space intValue] == AVCaptureColorSpace_HLG_BT2020) {
+        return AVCaptureColorSpace_HLG_BT2020;
+      }
+    }
+    
+    // Check for P3_D65
+    for (NSNumber *space in supportedColorSpaces) {
+      if ([space intValue] == AVCaptureColorSpace_P3_D65) {
+        return AVCaptureColorSpace_P3_D65;
+      }
+    }
+  }
+  
+  // Default fallback
+  return AVCaptureColorSpace_sRGB;
 }
 
 # pragma mark - Setter

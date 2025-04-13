@@ -112,6 +112,20 @@ enum CupertinoCodecType {
   appleProRes422Proxy,
 }
 
+enum CupertinoColorSpace {
+  /// The standard RGB color space.
+  sRGB,
+
+  /// The P3 D65 wide color space.
+  p3_D65,
+
+  /// The BT.2020 wide color space with HLG transfer function.
+  hlg_BT2020,
+
+  /// The Apple Log Color space with BT2020 primaries.
+  appleLog,
+}
+
 class CupertinoVideoOptions {
   /// Specify video file type, defaults to [AVFileTypeQuickTimeMovie].
   final CupertinoFileType? fileType;
@@ -119,12 +133,16 @@ class CupertinoVideoOptions {
   /// Specify video codec, defaults to [AVVideoCodecTypeH264].
   final CupertinoCodecType? codec;
 
+  /// Specify video color space, defaults to [AVVideoColorSpaceSRGB].
+  final CupertinoColorSpace? colorSpace;
+
   /// Specify video fps, defaults to [30].
   final int? fps;
 
   CupertinoVideoOptions({
     this.fileType,
     this.codec,
+    this.colorSpace,
     this.fps,
   });
 }
