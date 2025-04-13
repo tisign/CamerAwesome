@@ -447,7 +447,7 @@ static AVCaptureColorSpace colorSpaceFromInt(NSInteger colorSpaceInt) {
 - (void)configureColorSpaceForRecording:(AVCaptureDevice *)device 
                              colorSpaceInt:(NSInteger)colorSpaceInt
                                   codec:(AVVideoCodecType)codecType {
-  if (colorSpace <  0 || colorSpace > 4) {
+  if (colorSpaceInt <  0 || colorSpaceInt > 3) {
     // Use default if not specified
     return;
   }
