@@ -227,8 +227,12 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
 @implementation CupertinoVideoOptions
 + (instancetype)makeWithFileType:(CupertinoFileType)fileType
     codec:(CupertinoCodecType)codec
+<<<<<<< HEAD
     fps:(nullable NSNumber *)fps
     colorSpace:(nullable NSNumber *)colorSpace {
+=======
+    fps:(nullable NSNumber *)fps {
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
   CupertinoVideoOptions* pigeonResult = [[CupertinoVideoOptions alloc] init];
   pigeonResult.fileType = fileType;
   pigeonResult.codec = codec;
@@ -241,7 +245,10 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
   pigeonResult.fileType = [GetNullableObjectAtIndex(list, 0) integerValue];
   pigeonResult.codec = [GetNullableObjectAtIndex(list, 1) integerValue];
   pigeonResult.fps = GetNullableObjectAtIndex(list, 2);
+<<<<<<< HEAD
   pigeonResult.colorSpace = GetNullableObjectAtIndex(list, 3);
+=======
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
   return pigeonResult;
 }
 + (nullable CupertinoVideoOptions *)nullableFromList:(NSArray *)list {
@@ -252,7 +259,10 @@ static id GetNullableObjectAtIndex(NSArray *array, NSInteger key) {
     @(self.fileType),
     @(self.codec),
     (self.fps ?: [NSNull null]),
+<<<<<<< HEAD
     (self.colorSpace ?: [NSNull null]),
+=======
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
   ];
 }
 @end

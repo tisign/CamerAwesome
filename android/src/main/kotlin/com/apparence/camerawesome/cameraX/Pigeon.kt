@@ -333,9 +333,13 @@ data class CupertinoVideoOptions (
   /** Specify video codec, defaults to [AVVideoCodecTypeH264]. */
   val codec: CupertinoCodecType? = null,
   /** Specify video fps, defaults to [30]. */
+<<<<<<< HEAD
   val fps: Long? = null,
   /** Specify video color space, defaults to [AVVideoColorSpaceSRGB]. */
   val colorSpace: Long? = null
+=======
+  val fps: Long? = null
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
 
 ) {
   companion object {
@@ -348,8 +352,12 @@ data class CupertinoVideoOptions (
         CupertinoCodecType.ofRaw(it)
       }
       val fps = list[2].let { if (it is Int) it.toLong() else it as Long? }
+<<<<<<< HEAD
       val colorSpace = list[3].let { if (it is Int) it.toLong() else it as Long? }
       return CupertinoVideoOptions(fileType, codec, fps, colorSpace)
+=======
+      return CupertinoVideoOptions(fileType, codec, fps)
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
     }
   }
   fun toList(): List<Any?> {

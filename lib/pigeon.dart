@@ -62,10 +62,13 @@ enum PigeonSensorType {
   ///
   /// The wide angle sensor is the default sensor for iOS
   wideAngle,
+
   /// A built-in camera with a shorter focal length than that of the wide-angle camera.
   ultraWideAngle,
+
   /// A built-in camera device with a longer focal length than the wide-angle camera.
   telephoto,
+
   /// A device that consists of two cameras, one Infrared and one YUV.
   ///
   /// iOS only
@@ -77,7 +80,7 @@ enum CamerAwesomePermission {
   storage,
   camera,
   location,
-  record_audio,
+  recordAudio,
 }
 
 enum AnalysisImageFormat {
@@ -119,6 +122,14 @@ class PreviewSize {
       height: result[1]! as double,
     );
   }
+
+  Size toSize() => Size(width, height);
+
+  /// Returns a new [PreviewSize] with [width] and [height] inverted.
+  /// Useful when the preview size is given in portrait mode but the camera
+  /// is in landscape mode.
+  /// Ex : for tablets, the preview size is given in landscape mode but the device is in portrait mode.
+  inverted() => PreviewSize(width: height, height: width);
 }
 
 class ExifPreferences {
@@ -287,7 +298,10 @@ class CupertinoVideoOptions {
           ? CupertinoCodecType.values[result[1]! as int]
           : null,
       fps: result[2] as int?,
+<<<<<<< HEAD
       colorSpace: result[3] as int?,
+=======
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
     );
   }
 }
@@ -489,15 +503,24 @@ class AnalysisImageWrapper {
       cropRect: result[5] != null
           ? CropRectWrapper.decode(result[5]! as List<Object?>)
           : null,
+<<<<<<< HEAD
       rotation: result[6] != null
           ? AnalysisRotation.values[result[6]! as int]
           : null,
+=======
+      rotation:
+          result[6] != null ? AnalysisRotation.values[result[6]! as int] : null,
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
     );
   }
 }
 
 class _AnalysisImageUtilsCodec extends StandardMessageCodec {
   const _AnalysisImageUtilsCodec();
+<<<<<<< HEAD
+=======
+
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
     if (value is AnalysisImageWrapper) {
@@ -517,11 +540,19 @@ class _AnalysisImageUtilsCodec extends StandardMessageCodec {
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
+<<<<<<< HEAD
       case 128: 
         return AnalysisImageWrapper.decode(readValue(buffer)!);
       case 129: 
         return CropRectWrapper.decode(readValue(buffer)!);
       case 130: 
+=======
+      case 128:
+        return AnalysisImageWrapper.decode(readValue(buffer)!);
+      case 129:
+        return CropRectWrapper.decode(readValue(buffer)!);
+      case 130:
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
         return PlaneWrapper.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -539,12 +570,22 @@ class AnalysisImageUtils {
 
   static const MessageCodec<Object?> codec = _AnalysisImageUtilsCodec();
 
+<<<<<<< HEAD
   Future<AnalysisImageWrapper> nv21toJpeg(AnalysisImageWrapper arg_nv21Image, int arg_jpegQuality) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.AnalysisImageUtils.nv21toJpeg', codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
         await channel.send(<Object?>[arg_nv21Image, arg_jpegQuality]) as List<Object?>?;
+=======
+  Future<AnalysisImageWrapper> nv21toJpeg(
+      AnalysisImageWrapper arg_nv21Image, int arg_jpegQuality) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.AnalysisImageUtils.nv21toJpeg', codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList = await channel
+        .send(<Object?>[arg_nv21Image, arg_jpegQuality]) as List<Object?>?;
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -566,12 +607,22 @@ class AnalysisImageUtils {
     }
   }
 
+<<<<<<< HEAD
   Future<AnalysisImageWrapper> yuv420toJpeg(AnalysisImageWrapper arg_yuvImage, int arg_jpegQuality) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.AnalysisImageUtils.yuv420toJpeg', codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
         await channel.send(<Object?>[arg_yuvImage, arg_jpegQuality]) as List<Object?>?;
+=======
+  Future<AnalysisImageWrapper> yuv420toJpeg(
+      AnalysisImageWrapper arg_yuvImage, int arg_jpegQuality) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.AnalysisImageUtils.yuv420toJpeg', codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList = await channel
+        .send(<Object?>[arg_yuvImage, arg_jpegQuality]) as List<Object?>?;
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -593,7 +644,12 @@ class AnalysisImageUtils {
     }
   }
 
+<<<<<<< HEAD
   Future<AnalysisImageWrapper> yuv420toNv21(AnalysisImageWrapper arg_yuvImage) async {
+=======
+  Future<AnalysisImageWrapper> yuv420toNv21(
+      AnalysisImageWrapper arg_yuvImage) async {
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.AnalysisImageUtils.yuv420toNv21', codec,
         binaryMessenger: _binaryMessenger);
@@ -620,12 +676,22 @@ class AnalysisImageUtils {
     }
   }
 
+<<<<<<< HEAD
   Future<AnalysisImageWrapper> bgra8888toJpeg(AnalysisImageWrapper arg_bgra8888image, int arg_jpegQuality) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.AnalysisImageUtils.bgra8888toJpeg', codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
         await channel.send(<Object?>[arg_bgra8888image, arg_jpegQuality]) as List<Object?>?;
+=======
+  Future<AnalysisImageWrapper> bgra8888toJpeg(
+      AnalysisImageWrapper arg_bgra8888image, int arg_jpegQuality) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.AnalysisImageUtils.bgra8888toJpeg', codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList = await channel
+        .send(<Object?>[arg_bgra8888image, arg_jpegQuality]) as List<Object?>?;
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -650,6 +716,10 @@ class AnalysisImageUtils {
 
 class _CameraInterfaceCodec extends StandardMessageCodec {
   const _CameraInterfaceCodec();
+<<<<<<< HEAD
+=======
+
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
     if (value is AndroidFocusSettings) {
@@ -687,6 +757,7 @@ class _CameraInterfaceCodec extends StandardMessageCodec {
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
+<<<<<<< HEAD
       case 128: 
         return AndroidFocusSettings.decode(readValue(buffer)!);
       case 129: 
@@ -704,6 +775,25 @@ class _CameraInterfaceCodec extends StandardMessageCodec {
       case 135: 
         return PreviewSize.decode(readValue(buffer)!);
       case 136: 
+=======
+      case 128:
+        return AndroidFocusSettings.decode(readValue(buffer)!);
+      case 129:
+        return AndroidVideoOptions.decode(readValue(buffer)!);
+      case 130:
+        return CupertinoVideoOptions.decode(readValue(buffer)!);
+      case 131:
+        return ExifPreferences.decode(readValue(buffer)!);
+      case 132:
+        return PigeonSensor.decode(readValue(buffer)!);
+      case 133:
+        return PigeonSensorTypeDevice.decode(readValue(buffer)!);
+      case 134:
+        return PreviewSize.decode(readValue(buffer)!);
+      case 135:
+        return PreviewSize.decode(readValue(buffer)!);
+      case 136:
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
         return VideoOptions.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -721,12 +811,41 @@ class CameraInterface {
 
   static const MessageCodec<Object?> codec = _CameraInterfaceCodec();
 
+<<<<<<< HEAD
   Future<bool> setupCamera(List<PigeonSensor?> arg_sensors, String arg_aspectRatio, double arg_zoom, bool arg_mirrorFrontCamera, bool arg_enablePhysicalButton, String arg_flashMode, String arg_captureMode, bool arg_enableImageStream, ExifPreferences arg_exifPreferences, VideoOptions? arg_videoOptions) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.CameraInterface.setupCamera', codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
         await channel.send(<Object?>[arg_sensors, arg_aspectRatio, arg_zoom, arg_mirrorFrontCamera, arg_enablePhysicalButton, arg_flashMode, arg_captureMode, arg_enableImageStream, arg_exifPreferences, arg_videoOptions]) as List<Object?>?;
+=======
+  Future<bool> setupCamera(
+      List<PigeonSensor?> arg_sensors,
+      String arg_aspectRatio,
+      double arg_zoom,
+      bool arg_mirrorFrontCamera,
+      bool arg_enablePhysicalButton,
+      String arg_flashMode,
+      String arg_captureMode,
+      bool arg_enableImageStream,
+      ExifPreferences arg_exifPreferences,
+      VideoOptions? arg_videoOptions) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.CameraInterface.setupCamera', codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList = await channel.send(<Object?>[
+      arg_sensors,
+      arg_aspectRatio,
+      arg_zoom,
+      arg_mirrorFrontCamera,
+      arg_enablePhysicalButton,
+      arg_flashMode,
+      arg_captureMode,
+      arg_enableImageStream,
+      arg_exifPreferences,
+      arg_videoOptions
+    ]) as List<Object?>?;
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -831,7 +950,12 @@ class CameraInterface {
     }
   }
 
+<<<<<<< HEAD
   Future<bool> takePhoto(List<PigeonSensor?> arg_sensors, List<String?> arg_paths) async {
+=======
+  Future<bool> takePhoto(
+      List<PigeonSensor?> arg_sensors, List<String?> arg_paths) async {
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.CameraInterface.takePhoto', codec,
         binaryMessenger: _binaryMessenger);
@@ -858,7 +982,12 @@ class CameraInterface {
     }
   }
 
+<<<<<<< HEAD
   Future<void> recordVideo(List<PigeonSensor?> arg_sensors, List<String?> arg_paths) async {
+=======
+  Future<void> recordVideo(
+      List<PigeonSensor?> arg_sensors, List<String?> arg_paths) async {
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.CameraInterface.recordVideo', codec,
         binaryMessenger: _binaryMessenger);
@@ -884,8 +1013,12 @@ class CameraInterface {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.CameraInterface.pauseVideoRecording', codec,
         binaryMessenger: _binaryMessenger);
+<<<<<<< HEAD
     final List<Object?>? replyList =
         await channel.send(null) as List<Object?>?;
+=======
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -906,8 +1039,12 @@ class CameraInterface {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.CameraInterface.resumeVideoRecording', codec,
         binaryMessenger: _binaryMessenger);
+<<<<<<< HEAD
     final List<Object?>? replyList =
         await channel.send(null) as List<Object?>?;
+=======
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -928,8 +1065,12 @@ class CameraInterface {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.CameraInterface.receivedImageFromStream', codec,
         binaryMessenger: _binaryMessenger);
+<<<<<<< HEAD
     final List<Object?>? replyList =
         await channel.send(null) as List<Object?>?;
+=======
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -950,8 +1091,12 @@ class CameraInterface {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.CameraInterface.stopRecordingVideo', codec,
         binaryMessenger: _binaryMessenger);
+<<<<<<< HEAD
     final List<Object?>? replyList =
         await channel.send(null) as List<Object?>?;
+=======
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -977,8 +1122,12 @@ class CameraInterface {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.CameraInterface.getFrontSensors', codec,
         binaryMessenger: _binaryMessenger);
+<<<<<<< HEAD
     final List<Object?>? replyList =
         await channel.send(null) as List<Object?>?;
+=======
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1004,8 +1153,12 @@ class CameraInterface {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.CameraInterface.getBackSensors', codec,
         binaryMessenger: _binaryMessenger);
+<<<<<<< HEAD
     final List<Object?>? replyList =
         await channel.send(null) as List<Object?>?;
+=======
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1031,8 +1184,12 @@ class CameraInterface {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.CameraInterface.start', codec,
         binaryMessenger: _binaryMessenger);
+<<<<<<< HEAD
     final List<Object?>? replyList =
         await channel.send(null) as List<Object?>?;
+=======
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1058,8 +1215,12 @@ class CameraInterface {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.CameraInterface.stop', codec,
         binaryMessenger: _binaryMessenger);
+<<<<<<< HEAD
     final List<Object?>? replyList =
         await channel.send(null) as List<Object?>?;
+=======
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1107,8 +1268,12 @@ class CameraInterface {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.CameraInterface.handleAutoFocus', codec,
         binaryMessenger: _binaryMessenger);
+<<<<<<< HEAD
     final List<Object?>? replyList =
         await channel.send(null) as List<Object?>?;
+=======
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1129,12 +1294,23 @@ class CameraInterface {
   ///
   /// On Android, you can control after how much time you want to switch back
   /// to passive focus mode with [androidFocusSettings].
+<<<<<<< HEAD
   Future<void> focusOnPoint(PreviewSize arg_previewSize, double arg_x, double arg_y, AndroidFocusSettings? arg_androidFocusSettings) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.CameraInterface.focusOnPoint', codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
         await channel.send(<Object?>[arg_previewSize, arg_x, arg_y, arg_androidFocusSettings]) as List<Object?>?;
+=======
+  Future<void> focusOnPoint(PreviewSize arg_previewSize, double arg_x,
+      double arg_y, AndroidFocusSettings? arg_androidFocusSettings) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.CameraInterface.focusOnPoint', codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList = await channel.send(
+            <Object?>[arg_previewSize, arg_x, arg_y, arg_androidFocusSettings])
+        as List<Object?>?;
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1243,8 +1419,12 @@ class CameraInterface {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.CameraInterface.getMinZoom', codec,
         binaryMessenger: _binaryMessenger);
+<<<<<<< HEAD
     final List<Object?>? replyList =
         await channel.send(null) as List<Object?>?;
+=======
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1270,8 +1450,12 @@ class CameraInterface {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.CameraInterface.getMaxZoom', codec,
         binaryMessenger: _binaryMessenger);
+<<<<<<< HEAD
     final List<Object?>? replyList =
         await channel.send(null) as List<Object?>?;
+=======
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1346,8 +1530,12 @@ class CameraInterface {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.CameraInterface.availableSizes', codec,
         binaryMessenger: _binaryMessenger);
+<<<<<<< HEAD
     final List<Object?>? replyList =
         await channel.send(null) as List<Object?>?;
+=======
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1373,8 +1561,12 @@ class CameraInterface {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.CameraInterface.refresh', codec,
         binaryMessenger: _binaryMessenger);
+<<<<<<< HEAD
     final List<Object?>? replyList =
         await channel.send(null) as List<Object?>?;
+=======
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1479,12 +1671,26 @@ class CameraInterface {
     }
   }
 
+<<<<<<< HEAD
   Future<void> setupImageAnalysisStream(String arg_format, int arg_width, double? arg_maxFramesPerSecond, bool arg_autoStart) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.CameraInterface.setupImageAnalysisStream', codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
         await channel.send(<Object?>[arg_format, arg_width, arg_maxFramesPerSecond, arg_autoStart]) as List<Object?>?;
+=======
+  Future<void> setupImageAnalysisStream(String arg_format, int arg_width,
+      double? arg_maxFramesPerSecond, bool arg_autoStart) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.CameraInterface.setupImageAnalysisStream', codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList = await channel.send(<Object?>[
+      arg_format,
+      arg_width,
+      arg_maxFramesPerSecond,
+      arg_autoStart
+    ]) as List<Object?>?;
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1532,8 +1738,12 @@ class CameraInterface {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.CameraInterface.startAnalysis', codec,
         binaryMessenger: _binaryMessenger);
+<<<<<<< HEAD
     final List<Object?>? replyList =
         await channel.send(null) as List<Object?>?;
+=======
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1554,8 +1764,12 @@ class CameraInterface {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.CameraInterface.stopAnalysis', codec,
         binaryMessenger: _binaryMessenger);
+<<<<<<< HEAD
     final List<Object?>? replyList =
         await channel.send(null) as List<Object?>?;
+=======
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1594,9 +1808,17 @@ class CameraInterface {
     }
   }
 
+<<<<<<< HEAD
   Future<bool> isVideoRecordingAndImageAnalysisSupported(PigeonSensorPosition arg_sensor) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.CameraInterface.isVideoRecordingAndImageAnalysisSupported', codec,
+=======
+  Future<bool> isVideoRecordingAndImageAnalysisSupported(
+      PigeonSensorPosition arg_sensor) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.CameraInterface.isVideoRecordingAndImageAnalysisSupported',
+        codec,
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
         await channel.send(<Object?>[arg_sensor.index]) as List<Object?>?;
@@ -1625,8 +1847,12 @@ class CameraInterface {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.CameraInterface.isMultiCamSupported', codec,
         binaryMessenger: _binaryMessenger);
+<<<<<<< HEAD
     final List<Object?>? replyList =
         await channel.send(null) as List<Object?>?;
+=======
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',

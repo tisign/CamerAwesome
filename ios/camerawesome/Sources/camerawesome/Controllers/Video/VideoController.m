@@ -43,6 +43,7 @@ static AVCaptureColorSpace colorSpaceFromInt(NSInteger colorSpaceInt) {
 - (void)recordVideoAtPath:(NSString *)path captureDevice:(AVCaptureDevice *)device orientation:(NSInteger)orientation audioSetupCallback:(OnAudioSetup)audioSetupCallback videoWriterCallback:(OnVideoWriterSetup)videoWriterCallback options:(CupertinoVideoOptions *)options quality:(VideoRecordingQuality)quality completion:(nonnull void (^)(FlutterError * _Nullable))completion {
   _options = options;
   _recordingQuality = quality;
+<<<<<<< HEAD
 
   // Get the codec type first
   AVVideoCodecType codecType = [self getBestCodecTypeAccordingOptions:options];
@@ -54,6 +55,8 @@ static AVCaptureColorSpace colorSpaceFromInt(NSInteger colorSpaceInt) {
                             colorSpaceInt:options.colorSpace
                                     codec:codecType];
   }
+=======
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
   
   // Create audio & video writer
   if (![self setupWriterForPath:path audioSetupCallback:audioSetupCallback options:options completion:completion]) {
@@ -425,6 +428,7 @@ static AVCaptureColorSpace colorSpaceFromInt(NSInteger colorSpaceInt) {
   return size;
 }
 
+<<<<<<< HEAD
 // Convert CupertinoColorSpace to AVCaptureColorSpace
 - (AVCaptureColorSpace)convertToAVCaptureColorSpace:(CupertinoColorSpace)colorSpace {
   return colorSpaceFromInt(colorSpace);
@@ -606,6 +610,8 @@ static AVCaptureColorSpace colorSpaceFromInt(NSInteger colorSpaceInt) {
   return AVCaptureColorSpace_sRGB;
 }
 
+=======
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
 # pragma mark - Setter
 - (void)setIsAudioEnabled:(bool)isAudioEnabled {
   _isAudioEnabled = isAudioEnabled;

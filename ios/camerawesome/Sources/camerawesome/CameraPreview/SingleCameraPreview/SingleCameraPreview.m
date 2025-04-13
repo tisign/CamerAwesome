@@ -139,11 +139,6 @@
     _completion(nil, [FlutterError errorWithCode:@"CANNOT_OPEN_CAMERA" message:@"can't attach device to input" details:[error localizedDescription]]);
     return;
   }
-
-  // Disable automatic wide color configuration to handle it manually
-  if ([_captureSession respondsToSelector:@selector(setAutomaticallyConfiguresCaptureDeviceForWideColor:)]) {
-    [_captureSession setAutomaticallyConfiguresCaptureDeviceForWideColor:NO];
-  }
   
   // Create connection
   _captureConnection = [AVCaptureConnection connectionWithInputPorts:_captureVideoInput.ports

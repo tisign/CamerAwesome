@@ -164,8 +164,12 @@ typedef NS_ENUM(NSUInteger, AnalysisRotation) {
 @interface CupertinoVideoOptions : NSObject
 + (instancetype)makeWithFileType:(CupertinoFileType)fileType
     codec:(CupertinoCodecType)codec
+<<<<<<< HEAD
     fps:(nullable NSNumber *)fps
     colorSpace:(nullable NSNumber *)colorSpace;
+=======
+    fps:(nullable NSNumber *)fps;
+>>>>>>> parent of 4ee34e5 (added color space option to iOS)
 /// Specify video file type, defaults to [AVFileTypeQuickTimeMovie].
 @property(nonatomic, assign) CupertinoFileType fileType;
 /// Specify video codec, defaults to [AVVideoCodecTypeH264].
