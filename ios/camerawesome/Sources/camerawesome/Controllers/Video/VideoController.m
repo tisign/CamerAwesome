@@ -410,9 +410,9 @@ FourCharCode const videoFormat = kCVPixelFormatType_32BGRA;
 // Convert CupertinoColorSpace to AVCaptureColorSpace
 - (AVCaptureColorSpace)convertToAVCaptureColorSpace:(CupertinoColorSpace)colorSpace {
   switch (colorSpace) {
-    case CupertinoColorSpaceP3_D65:
+    case CupertinoColorSpaceP3D65:
       return AVCaptureColorSpace_P3_D65;
-    case CupertinoColorSpaceHlg_BT2020:
+    case CupertinoColorSpaceHlgBT2020:
       return AVCaptureColorSpace_HLG_BT2020;
     case CupertinoColorSpaceAppleLog:
       if (@available(iOS 16.0, *)) {
@@ -484,7 +484,7 @@ FourCharCode const videoFormat = kCVPixelFormatType_32BGRA;
           [codec isEqualToString:AVVideoCodecTypeAppleProRes422Proxy])) {
       return AVVideoCodecTypeAppleProRes422HQ;
     }
-  } else if (colorSpace == CupertinoColorSpaceHlg_BT2020) {
+  } else if (colorSpace == CupertinoColorSpaceHlgBT2020) {
     // HLG works best with HEVC
     if (![codec isEqualToString:AVVideoCodecTypeHEVC]) {
       return AVVideoCodecTypeHEVC;

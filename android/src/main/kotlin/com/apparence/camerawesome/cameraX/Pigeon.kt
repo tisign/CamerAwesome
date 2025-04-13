@@ -131,7 +131,7 @@ enum class CupertinoColorSpace(val raw: Int) {
   /** The standard RGB color space. */
   S_RGB(0),
   /** The P3 D65 wide color space. */
-  P3_D65(1),
+  P3D65(1),
   /** The BT.2020 wide color space with HLG transfer function. */
   HLG_BT2020(2),
   /** The Apple Log Color space with BT2020 primaries. */

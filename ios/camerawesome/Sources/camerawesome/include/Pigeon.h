@@ -93,9 +93,9 @@ typedef NS_ENUM(NSUInteger, CupertinoColorSpace) {
   /// The standard RGB color space.
   CupertinoColorSpaceSRGB = 0,
   /// The P3 D65 wide color space.
-  CupertinoColorSpaceP3_D65 = 1,
+  CupertinoColorSpaceP3D65 = 1,
   /// The BT.2020 wide color space with HLG transfer function.
-  CupertinoColorSpaceHlg_BT2020 = 2,
+  CupertinoColorSpaceHlgBT2020 = 2,
   /// The Apple Log Color space with BT2020 primaries.
   CupertinoColorSpaceAppleLog = 3,
 };

@@ -68,9 +68,9 @@ enum CupertinoColorSpace {
   /// The standard RGB color space.
   sRGB,
   /// The P3 D65 wide color space.
-  p3_D65,
+  p3D65,
   /// The BT.2020 wide color space with HLG transfer function.
-  hlg_BT2020,
+  hlgBT2020,
   /// The Apple Log Color space with BT2020 primaries.
   appleLog,
 }
