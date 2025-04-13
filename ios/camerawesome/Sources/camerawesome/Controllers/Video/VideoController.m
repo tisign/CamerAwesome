@@ -474,26 +474,6 @@ FourCharCode const videoFormat = kCVPixelFormatType_32BGRA;
   }
 }
 
-- (AVVideoCodecType)ensureCodecCompatibilityWithColorSpace:(AVVideoCodecType)codec colorSpace:(CupertinoColorSpace)colorSpace {
-  if (colorSpace == CupertinoColorSpaceAppleLog) {
-    // appleLog requires ProRes
-    if (!([codec isEqualToString:AVVideoCodecTypeAppleProRes4444] ||
-          [codec isEqualToString:AVVideoCodecTypeAppleProRes422] ||
-          [codec isEqualToString:AVVideoCodecTypeAppleProRes422HQ] ||
-          [codec isEqualToString:AVVideoCodecTypeAppleProRes422LT] ||
-          [codec isEqualToString:AVVideoCodecTypeAppleProRes422Proxy])) {
-      return AVVideoCodecTypeAppleProRes422HQ;
-    }
-  } else if (colorSpace == CupertinoColorSpaceHlgBT2020) {
-    // HLG works best with HEVC
-    if (![codec isEqualToString:AVVideoCodecTypeHEVC]) {
-      return AVVideoCodecTypeHEVC;
-    }
-  }
-  
-  return codec;
-}
-
 // Check if a color space is compatible with a codec
 - (BOOL)isColorSpaceCompatibleWithCodec:(AVCaptureColorSpace)colorSpace codec:(AVVideoCodecType)codec {
   // appleLog is only compatible with ProRes codecs
