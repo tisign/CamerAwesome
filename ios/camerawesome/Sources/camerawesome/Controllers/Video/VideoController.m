@@ -18,7 +18,7 @@ static AVCaptureColorSpace colorSpaceFromInt(NSInteger colorSpaceInt) {
     case 2: return AVCaptureColorSpace_HLG_BT2020;
     case 3:
       if (@available(iOS 16.0, *)) {
-        return AVCaptureColorSpace_appleLog;
+        return AVCaptureColorSpace_AppleLog;
       } else {
         return AVCaptureColorSpace_sRGB;
       }
@@ -39,7 +39,7 @@ static AVCaptureColorSpace colorSpaceFromInt(NSInteger colorSpaceInt) {
 
 # pragma mark - User video interactions
 
-/// Start recording video at given path
+// Start recording video at given path
 - (void)recordVideoAtPath:(NSString *)path captureDevice:(AVCaptureDevice *)device orientation:(NSInteger)orientation audioSetupCallback:(OnAudioSetup)audioSetupCallback videoWriterCallback:(OnVideoWriterSetup)videoWriterCallback options:(CupertinoVideoOptions *)options quality:(VideoRecordingQuality)quality completion:(nonnull void (^)(FlutterError * _Nullable))completion {
   _options = options;
   _recordingQuality = quality;
@@ -481,7 +481,7 @@ static AVCaptureColorSpace colorSpaceFromInt(NSInteger colorSpaceInt) {
 // Check if a color space is compatible with a codec
 - (BOOL)isColorSpaceCompatibleWithCodec:(AVCaptureColorSpace)colorSpace codec:(AVVideoCodecType)codec {
   // appleLog is only compatible with ProRes codecs
-  if (colorSpace == AVCaptureColorSpace_appleLog) {
+  if (colorSpaceInt == 3) {
     return [codec isEqualToString:AVVideoCodecTypeAppleProRes4444] ||
            [codec isEqualToString:AVVideoCodecTypeAppleProRes422] ||
            [codec isEqualToString:AVVideoCodecTypeAppleProRes422HQ] ||
@@ -507,7 +507,7 @@ static AVCaptureColorSpace colorSpaceFromInt(NSInteger colorSpaceInt) {
                        [codec isEqualToString:AVVideoCodecTypeAppleProRes422Proxy];
   
   // Original was appleLog
-  if (originalColorSpace == AVCaptureColorSpace_appleLog) {
+  if (originalColorSpace == AVCaptureColorSpace_AppleLog) {
     // If it's a ProRes codec, we need to check alternatives for appleLog
     if (isProResCodec) {
       // Check for HLG_BT2020 support
@@ -566,8 +566,8 @@ static AVCaptureColorSpace colorSpaceFromInt(NSInteger colorSpaceInt) {
     // ProRes can work with appleLog if supported
     if (@available(iOS 16.0, *)) {
       for (NSNumber *space in supportedColorSpaces) {
-        if ([space intValue] == AVCaptureColorSpace_appleLog) {
-          return AVCaptureColorSpace_appleLog;
+        if ([space intValue] == AVCaptureColorSpace_AppleLog) {
+          return AVCaptureColorSpace_AppleLog;
         }
       }
     }
