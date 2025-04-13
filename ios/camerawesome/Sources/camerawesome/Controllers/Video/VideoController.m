@@ -416,7 +416,7 @@ FourCharCode const videoFormat = kCVPixelFormatType_32BGRA;
       return AVCaptureColorSpace_HLG_BT2020;
     case CupertinoColorSpaceAppleLog:
       if (@available(iOS 16.0, *)) {
-        return AVCaptureColorSpace_appleLog;
+        return AVCaptureColorSpace_AppleLog;
       } else {
         return AVCaptureColorSpace_sRGB;
       }
@@ -497,7 +497,7 @@ FourCharCode const videoFormat = kCVPixelFormatType_32BGRA;
 // Check if a color space is compatible with a codec
 - (BOOL)isColorSpaceCompatibleWithCodec:(AVCaptureColorSpace)colorSpace codec:(AVVideoCodecType)codec {
   // appleLog is only compatible with ProRes codecs
-  if (colorSpace == AVCaptureColorSpace_appleLog) {
+  if (colorSpace == AVCaptureColorSpace_AppleLog) {
     return [codec isEqualToString:AVVideoCodecTypeAppleProRes4444] ||
            [codec isEqualToString:AVVideoCodecTypeAppleProRes422] ||
            [codec isEqualToString:AVVideoCodecTypeAppleProRes422HQ] ||
@@ -523,7 +523,7 @@ FourCharCode const videoFormat = kCVPixelFormatType_32BGRA;
                        [codec isEqualToString:AVVideoCodecTypeAppleProRes422Proxy];
   
   // Original was appleLog
-  if (originalColorSpace == AVCaptureColorSpace_appleLog) {
+  if (originalColorSpace == AVCaptureColorSpace_AppleLog) {
     // If it's a ProRes codec, we need to check alternatives for appleLog
     if (isProResCodec) {
       // Check for HLG_BT2020 support
@@ -582,8 +582,8 @@ FourCharCode const videoFormat = kCVPixelFormatType_32BGRA;
     // ProRes can work with appleLog if supported
     if (@available(iOS 16.0, *)) {
       for (NSNumber *space in supportedColorSpaces) {
-        if ([space intValue] == AVCaptureColorSpace_appleLog) {
-          return AVCaptureColorSpace_appleLog;
+        if ([space intValue] == AVCaptureColorSpace_AppleLog) {
+          return AVCaptureColorSpace_AppleLog;
         }
       }
     }
