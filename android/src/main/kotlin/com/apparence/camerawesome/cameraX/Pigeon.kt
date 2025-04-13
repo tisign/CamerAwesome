@@ -127,23 +127,6 @@ enum class CupertinoCodecType(val raw: Int) {
   }
 }
 
-enum class CupertinoColorSpace(val raw: Int) {
-  /** The standard RGB color space. */
-  S_RGB(0),
-  /** The P3 D65 wide color space. */
-  P3D65(1),
-  /** The BT.2020 wide color space with HLG transfer function. */
-  HLG_BT2020(2),
-  /** The Apple Log Color space with BT2020 primaries. */
-  APPLE_LOG(3);
-
-  companion object {
-    fun ofRaw(raw: Int): CupertinoColorSpace? {
-      return values().firstOrNull { it.raw == raw }
-    }
-  }
-}
-
 enum class PigeonSensorType(val raw: Int) {
   /**
    * A built-in wide-angle camera.
@@ -340,7 +323,7 @@ data class CupertinoVideoOptions (
   /** Specify video fps, defaults to [30]. */
   val fps: Long? = null,
   /** Specify video color space, defaults to [AVVideoColorSpaceSRGB]. */
-  val colorSpace: CupertinoColorSpace? = null
+  val colorSpace: Long? = null
 )
  {
   companion object {
@@ -348,7 +331,7 @@ data class CupertinoVideoOptions (
       val fileType = pigeonVar_list[0] as CupertinoFileType?
       val codec = pigeonVar_list[1] as CupertinoCodecType?
       val fps = pigeonVar_list[2].let { num -> if (num is Int) num.toLong() else num as Long? }
-      val colorSpace = pigeonVar_list[3] as CupertinoColorSpace?
+      val colorSpace = pigeonVar_list[3].let { num -> if (num is Int) num.toLong() else num as Long? }
       return CupertinoVideoOptions(fileType, codec, fps, colorSpace)
     }
   }
@@ -544,80 +527,75 @@ private object PigeonPigeonCodec : StandardMessageCodec() {
       }
       134.toByte() -> {
         return (readValue(buffer) as Int?)?.let {
-          CupertinoColorSpace.ofRaw(it)
+          PigeonSensorType.ofRaw(it)
         }
       }
       135.toByte() -> {
         return (readValue(buffer) as Int?)?.let {
-          PigeonSensorType.ofRaw(it)
+          CamerAwesomePermission.ofRaw(it)
         }
       }
       136.toByte() -> {
         return (readValue(buffer) as Int?)?.let {
-          CamerAwesomePermission.ofRaw(it)
+          AnalysisImageFormat.ofRaw(it)
         }
       }
       137.toByte() -> {
         return (readValue(buffer) as Int?)?.let {
-          AnalysisImageFormat.ofRaw(it)
-        }
-      }
-      138.toByte() -> {
-        return (readValue(buffer) as Int?)?.let {
           AnalysisRotation.ofRaw(it)
         }
       }
-      139.toByte() -> {
+      138.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           PreviewSize.fromList(it)
         }
       }
-      140.toByte() -> {
+      139.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           ExifPreferences.fromList(it)
         }
       }
-      141.toByte() -> {
+      140.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           PigeonSensor.fromList(it)
         }
       }
-      142.toByte() -> {
+      141.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           VideoOptions.fromList(it)
         }
       }
-      143.toByte() -> {
+      142.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           AndroidVideoOptions.fromList(it)
         }
       }
-      144.toByte() -> {
+      143.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           CupertinoVideoOptions.fromList(it)
         }
       }
-      145.toByte() -> {
+      144.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           PigeonSensorTypeDevice.fromList(it)
         }
       }
-      146.toByte() -> {
+      145.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           AndroidFocusSettings.fromList(it)
         }
       }
-      147.toByte() -> {
+      146.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           PlaneWrapper.fromList(it)
         }
       }
-      148.toByte() -> {
+      147.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           CropRectWrapper.fromList(it)
         }
       }
-      149.toByte() -> {
+      148.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           AnalysisImageWrapper.fromList(it)
         }
@@ -647,68 +625,64 @@ private object PigeonPigeonCodec : StandardMessageCodec() {
         stream.write(133)
         writeValue(stream, value.raw)
       }
-      is CupertinoColorSpace -> {
+      is PigeonSensorType -> {
         stream.write(134)
         writeValue(stream, value.raw)
       }
-      is PigeonSensorType -> {
+      is CamerAwesomePermission -> {
         stream.write(135)
         writeValue(stream, value.raw)
       }
-      is CamerAwesomePermission -> {
+      is AnalysisImageFormat -> {
         stream.write(136)
         writeValue(stream, value.raw)
       }
-      is AnalysisImageFormat -> {
+      is AnalysisRotation -> {
         stream.write(137)
         writeValue(stream, value.raw)
       }
-      is AnalysisRotation -> {
-        stream.write(138)
-        writeValue(stream, value.raw)
-      }
       is PreviewSize -> {
-        stream.write(139)
+        stream.write(138)
         writeValue(stream, value.toList())
       }
       is ExifPreferences -> {
-        stream.write(140)
+        stream.write(139)
         writeValue(stream, value.toList())
       }
       is PigeonSensor -> {
-        stream.write(141)
+        stream.write(140)
         writeValue(stream, value.toList())
       }
       is VideoOptions -> {
-        stream.write(142)
+        stream.write(141)
         writeValue(stream, value.toList())
       }
       is AndroidVideoOptions -> {
-        stream.write(143)
+        stream.write(142)
         writeValue(stream, value.toList())
       }
       is CupertinoVideoOptions -> {
-        stream.write(144)
+        stream.write(143)
         writeValue(stream, value.toList())
       }
       is PigeonSensorTypeDevice -> {
-        stream.write(145)
+        stream.write(144)
         writeValue(stream, value.toList())
       }
       is AndroidFocusSettings -> {
-        stream.write(146)
+        stream.write(145)
         writeValue(stream, value.toList())
       }
       is PlaneWrapper -> {
-        stream.write(147)
+        stream.write(146)
         writeValue(stream, value.toList())
       }
       is CropRectWrapper -> {
-        stream.write(148)
+        stream.write(147)
         writeValue(stream, value.toList())
       }
       is AnalysisImageWrapper -> {
-        stream.write(149)
+        stream.write(148)
         writeValue(stream, value.toList())
       }
       else -> super.writeValue(stream, value)

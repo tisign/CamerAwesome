@@ -64,17 +64,6 @@ enum CupertinoCodecType {
   appleProRes422Proxy,
 }
 
-enum CupertinoColorSpace {
-  /// The standard RGB color space.
-  sRGB,
-  /// The P3 D65 wide color space.
-  p3D65,
-  /// The BT.2020 wide color space with HLG transfer function.
-  hlgBT2020,
-  /// The Apple Log Color space with BT2020 primaries.
-  appleLog,
-}
-
 enum PigeonSensorType {
   /// A built-in wide-angle camera.
   ///
@@ -276,7 +265,7 @@ class CupertinoVideoOptions {
   int? fps;
 
   /// Specify video color space, defaults to [AVVideoColorSpaceSRGB].
-  CupertinoColorSpace? colorSpace;
+  int? colorSpace;
 
   Object encode() {
     return <Object?>[
@@ -293,7 +282,7 @@ class CupertinoVideoOptions {
       fileType: result[0] as CupertinoFileType?,
       codec: result[1] as CupertinoCodecType?,
       fps: result[2] as int?,
-      colorSpace: result[3] as CupertinoColorSpace?,
+      colorSpace: result[3] as int?,
     );
   }
 }
@@ -518,53 +507,50 @@ class _PigeonCodec extends StandardMessageCodec {
     } else     if (value is CupertinoCodecType) {
       buffer.putUint8(133);
       writeValue(buffer, value.index);
-    } else     if (value is CupertinoColorSpace) {
+    } else     if (value is PigeonSensorType) {
       buffer.putUint8(134);
       writeValue(buffer, value.index);
-    } else     if (value is PigeonSensorType) {
+    } else     if (value is CamerAwesomePermission) {
       buffer.putUint8(135);
       writeValue(buffer, value.index);
-    } else     if (value is CamerAwesomePermission) {
+    } else     if (value is AnalysisImageFormat) {
       buffer.putUint8(136);
       writeValue(buffer, value.index);
-    } else     if (value is AnalysisImageFormat) {
+    } else     if (value is AnalysisRotation) {
       buffer.putUint8(137);
       writeValue(buffer, value.index);
-    } else     if (value is AnalysisRotation) {
-      buffer.putUint8(138);
-      writeValue(buffer, value.index);
     } else     if (value is PreviewSize) {
-      buffer.putUint8(139);
+      buffer.putUint8(138);
       writeValue(buffer, value.encode());
     } else     if (value is ExifPreferences) {
-      buffer.putUint8(140);
+      buffer.putUint8(139);
       writeValue(buffer, value.encode());
     } else     if (value is PigeonSensor) {
-      buffer.putUint8(141);
+      buffer.putUint8(140);
       writeValue(buffer, value.encode());
     } else     if (value is VideoOptions) {
-      buffer.putUint8(142);
+      buffer.putUint8(141);
       writeValue(buffer, value.encode());
     } else     if (value is AndroidVideoOptions) {
-      buffer.putUint8(143);
+      buffer.putUint8(142);
       writeValue(buffer, value.encode());
     } else     if (value is CupertinoVideoOptions) {
-      buffer.putUint8(144);
+      buffer.putUint8(143);
       writeValue(buffer, value.encode());
     } else     if (value is PigeonSensorTypeDevice) {
-      buffer.putUint8(145);
+      buffer.putUint8(144);
       writeValue(buffer, value.encode());
     } else     if (value is AndroidFocusSettings) {
-      buffer.putUint8(146);
+      buffer.putUint8(145);
       writeValue(buffer, value.encode());
     } else     if (value is PlaneWrapper) {
-      buffer.putUint8(147);
+      buffer.putUint8(146);
       writeValue(buffer, value.encode());
     } else     if (value is CropRectWrapper) {
-      buffer.putUint8(148);
+      buffer.putUint8(147);
       writeValue(buffer, value.encode());
     } else     if (value is AnalysisImageWrapper) {
-      buffer.putUint8(149);
+      buffer.putUint8(148);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -591,40 +577,37 @@ class _PigeonCodec extends StandardMessageCodec {
         return value == null ? null : CupertinoCodecType.values[value];
       case 134: 
         final int? value = readValue(buffer) as int?;
-        return value == null ? null : CupertinoColorSpace.values[value];
+        return value == null ? null : PigeonSensorType.values[value];
       case 135: 
         final int? value = readValue(buffer) as int?;
-        return value == null ? null : PigeonSensorType.values[value];
+        return value == null ? null : CamerAwesomePermission.values[value];
       case 136: 
         final int? value = readValue(buffer) as int?;
-        return value == null ? null : CamerAwesomePermission.values[value];
+        return value == null ? null : AnalysisImageFormat.values[value];
       case 137: 
         final int? value = readValue(buffer) as int?;
-        return value == null ? null : AnalysisImageFormat.values[value];
-      case 138: 
-        final int? value = readValue(buffer) as int?;
         return value == null ? null : AnalysisRotation.values[value];
-      case 139: 
+      case 138: 
         return PreviewSize.decode(readValue(buffer)!);
-      case 140: 
+      case 139: 
         return ExifPreferences.decode(readValue(buffer)!);
-      case 141: 
+      case 140: 
         return PigeonSensor.decode(readValue(buffer)!);
-      case 142: 
+      case 141: 
         return VideoOptions.decode(readValue(buffer)!);
-      case 143: 
+      case 142: 
         return AndroidVideoOptions.decode(readValue(buffer)!);
-      case 144: 
+      case 143: 
         return CupertinoVideoOptions.decode(readValue(buffer)!);
-      case 145: 
+      case 144: 
         return PigeonSensorTypeDevice.decode(readValue(buffer)!);
-      case 146: 
+      case 145: 
         return AndroidFocusSettings.decode(readValue(buffer)!);
-      case 147: 
+      case 146: 
         return PlaneWrapper.decode(readValue(buffer)!);
-      case 148: 
+      case 147: 
         return CropRectWrapper.decode(readValue(buffer)!);
-      case 149: 
+      case 148: 
         return AnalysisImageWrapper.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);

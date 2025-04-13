@@ -89,23 +89,6 @@ typedef NS_ENUM(NSUInteger, CupertinoCodecType) {
 - (instancetype)initWithValue:(CupertinoCodecType)value;
 @end
 
-typedef NS_ENUM(NSUInteger, CupertinoColorSpace) {
-  /// The standard RGB color space.
-  CupertinoColorSpaceSRGB = 0,
-  /// The P3 D65 wide color space.
-  CupertinoColorSpaceP3D65 = 1,
-  /// The BT.2020 wide color space with HLG transfer function.
-  CupertinoColorSpaceHlgBT2020 = 2,
-  /// The Apple Log Color space with BT2020 primaries.
-  CupertinoColorSpaceAppleLog = 3,
-};
-
-/// Wrapper for CupertinoColorSpace to allow for nullability.
-@interface CupertinoColorSpaceBox : NSObject
-@property(nonatomic, assign) CupertinoColorSpace value;
-- (instancetype)initWithValue:(CupertinoColorSpace)value;
-@end
-
 typedef NS_ENUM(NSUInteger, PigeonSensorType) {
   /// A built-in wide-angle camera.
   ///
@@ -236,7 +219,7 @@ typedef NS_ENUM(NSUInteger, AnalysisRotation) {
 + (instancetype)makeWithFileType:(nullable CupertinoFileTypeBox *)fileType
     codec:(nullable CupertinoCodecTypeBox *)codec
     fps:(nullable NSNumber *)fps
-    colorSpace:(nullable CupertinoColorSpaceBox *)colorSpace;
+    colorSpace:(nullable NSNumber *)colorSpace;
 /// Specify video file type, defaults to [AVFileTypeQuickTimeMovie].
 @property(nonatomic, strong, nullable) CupertinoFileTypeBox * fileType;
 /// Specify video codec, defaults to [AVVideoCodecTypeH264].
@@ -244,7 +227,7 @@ typedef NS_ENUM(NSUInteger, AnalysisRotation) {
 /// Specify video fps, defaults to [30].
 @property(nonatomic, strong, nullable) NSNumber * fps;
 /// Specify video color space, defaults to [AVVideoColorSpaceSRGB].
-@property(nonatomic, strong, nullable) CupertinoColorSpaceBox * colorSpace;
+@property(nonatomic, strong, nullable) NSNumber * colorSpace;
 @end
 
 @interface PigeonSensorTypeDevice : NSObject

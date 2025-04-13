@@ -86,16 +86,6 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
 }
 @end
 
-@implementation CupertinoColorSpaceBox
-- (instancetype)initWithValue:(CupertinoColorSpace)value {
-  self = [super init];
-  if (self) {
-    _value = value;
-  }
-  return self;
-}
-@end
-
 @implementation PigeonSensorTypeBox
 - (instancetype)initWithValue:(PigeonSensorType)value {
   self = [super init];
@@ -341,7 +331,7 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
 + (instancetype)makeWithFileType:(nullable CupertinoFileTypeBox *)fileType
     codec:(nullable CupertinoCodecTypeBox *)codec
     fps:(nullable NSNumber *)fps
-    colorSpace:(nullable CupertinoColorSpaceBox *)colorSpace {
+    colorSpace:(nullable NSNumber *)colorSpace {
   CupertinoVideoOptions* pigeonResult = [[CupertinoVideoOptions alloc] init];
   pigeonResult.fileType = fileType;
   pigeonResult.codec = codec;
@@ -572,45 +562,41 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
     }
     case 134: {
       NSNumber *enumAsNumber = [self readValue];
-      return enumAsNumber == nil ? nil : [[CupertinoColorSpaceBox alloc] initWithValue:[enumAsNumber integerValue]];
+      return enumAsNumber == nil ? nil : [[PigeonSensorTypeBox alloc] initWithValue:[enumAsNumber integerValue]];
     }
     case 135: {
       NSNumber *enumAsNumber = [self readValue];
-      return enumAsNumber == nil ? nil : [[PigeonSensorTypeBox alloc] initWithValue:[enumAsNumber integerValue]];
+      return enumAsNumber == nil ? nil : [[CamerAwesomePermissionBox alloc] initWithValue:[enumAsNumber integerValue]];
     }
     case 136: {
       NSNumber *enumAsNumber = [self readValue];
-      return enumAsNumber == nil ? nil : [[CamerAwesomePermissionBox alloc] initWithValue:[enumAsNumber integerValue]];
+      return enumAsNumber == nil ? nil : [[AnalysisImageFormatBox alloc] initWithValue:[enumAsNumber integerValue]];
     }
     case 137: {
       NSNumber *enumAsNumber = [self readValue];
-      return enumAsNumber == nil ? nil : [[AnalysisImageFormatBox alloc] initWithValue:[enumAsNumber integerValue]];
-    }
-    case 138: {
-      NSNumber *enumAsNumber = [self readValue];
       return enumAsNumber == nil ? nil : [[AnalysisRotationBox alloc] initWithValue:[enumAsNumber integerValue]];
     }
-    case 139: 
+    case 138: 
       return [PreviewSize fromList:[self readValue]];
-    case 140: 
+    case 139: 
       return [ExifPreferences fromList:[self readValue]];
-    case 141: 
+    case 140: 
       return [PigeonSensor fromList:[self readValue]];
-    case 142: 
+    case 141: 
       return [VideoOptions fromList:[self readValue]];
-    case 143: 
+    case 142: 
       return [AndroidVideoOptions fromList:[self readValue]];
-    case 144: 
+    case 143: 
       return [CupertinoVideoOptions fromList:[self readValue]];
-    case 145: 
+    case 144: 
       return [PigeonSensorTypeDevice fromList:[self readValue]];
-    case 146: 
+    case 145: 
       return [AndroidFocusSettings fromList:[self readValue]];
-    case 147: 
+    case 146: 
       return [PlaneWrapper fromList:[self readValue]];
-    case 148: 
+    case 147: 
       return [CropRectWrapper fromList:[self readValue]];
-    case 149: 
+    case 148: 
       return [AnalysisImageWrapper fromList:[self readValue]];
     default:
       return [super readValueOfType:type];
@@ -642,58 +628,54 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
     CupertinoCodecTypeBox *box = (CupertinoCodecTypeBox *)value;
     [self writeByte:133];
     [self writeValue:(value == nil ? [NSNull null] : [NSNumber numberWithInteger:box.value])];
-  } else if ([value isKindOfClass:[CupertinoColorSpaceBox class]]) {
-    CupertinoColorSpaceBox *box = (CupertinoColorSpaceBox *)value;
-    [self writeByte:134];
-    [self writeValue:(value == nil ? [NSNull null] : [NSNumber numberWithInteger:box.value])];
   } else if ([value isKindOfClass:[PigeonSensorTypeBox class]]) {
     PigeonSensorTypeBox *box = (PigeonSensorTypeBox *)value;
-    [self writeByte:135];
+    [self writeByte:134];
     [self writeValue:(value == nil ? [NSNull null] : [NSNumber numberWithInteger:box.value])];
   } else if ([value isKindOfClass:[CamerAwesomePermissionBox class]]) {
     CamerAwesomePermissionBox *box = (CamerAwesomePermissionBox *)value;
-    [self writeByte:136];
+    [self writeByte:135];
     [self writeValue:(value == nil ? [NSNull null] : [NSNumber numberWithInteger:box.value])];
   } else if ([value isKindOfClass:[AnalysisImageFormatBox class]]) {
     AnalysisImageFormatBox *box = (AnalysisImageFormatBox *)value;
-    [self writeByte:137];
+    [self writeByte:136];
     [self writeValue:(value == nil ? [NSNull null] : [NSNumber numberWithInteger:box.value])];
   } else if ([value isKindOfClass:[AnalysisRotationBox class]]) {
     AnalysisRotationBox *box = (AnalysisRotationBox *)value;
-    [self writeByte:138];
+    [self writeByte:137];
     [self writeValue:(value == nil ? [NSNull null] : [NSNumber numberWithInteger:box.value])];
   } else if ([value isKindOfClass:[PreviewSize class]]) {
-    [self writeByte:139];
+    [self writeByte:138];
     [self writeValue:[value toList]];
   } else if ([value isKindOfClass:[ExifPreferences class]]) {
-    [self writeByte:140];
+    [self writeByte:139];
     [self writeValue:[value toList]];
   } else if ([value isKindOfClass:[PigeonSensor class]]) {
-    [self writeByte:141];
+    [self writeByte:140];
     [self writeValue:[value toList]];
   } else if ([value isKindOfClass:[VideoOptions class]]) {
-    [self writeByte:142];
+    [self writeByte:141];
     [self writeValue:[value toList]];
   } else if ([value isKindOfClass:[AndroidVideoOptions class]]) {
-    [self writeByte:143];
+    [self writeByte:142];
     [self writeValue:[value toList]];
   } else if ([value isKindOfClass:[CupertinoVideoOptions class]]) {
-    [self writeByte:144];
+    [self writeByte:143];
     [self writeValue:[value toList]];
   } else if ([value isKindOfClass:[PigeonSensorTypeDevice class]]) {
-    [self writeByte:145];
+    [self writeByte:144];
     [self writeValue:[value toList]];
   } else if ([value isKindOfClass:[AndroidFocusSettings class]]) {
-    [self writeByte:146];
+    [self writeByte:145];
     [self writeValue:[value toList]];
   } else if ([value isKindOfClass:[PlaneWrapper class]]) {
-    [self writeByte:147];
+    [self writeByte:146];
     [self writeValue:[value toList]];
   } else if ([value isKindOfClass:[CropRectWrapper class]]) {
-    [self writeByte:148];
+    [self writeByte:147];
     [self writeValue:[value toList]];
   } else if ([value isKindOfClass:[AnalysisImageWrapper class]]) {
-    [self writeByte:149];
+    [self writeByte:148];
     [self writeValue:[value toList]];
   } else {
     [super writeValue:value];

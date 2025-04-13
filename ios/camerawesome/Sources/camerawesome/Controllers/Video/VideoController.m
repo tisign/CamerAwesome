@@ -5,9 +5,26 @@
 //  Created by Dimitri Dessus on 17/12/2020.
 //
 
+
 #import "VideoController.h"
 
+
 FourCharCode const videoFormat = kCVPixelFormatType_32BGRA;
+
+static AVCaptureColorSpace colorSpaceFromInt(NSInteger colorSpaceInt) {
+  switch (colorSpaceInt) {
+    case 0: return AVCaptureColorSpace_sRGB;
+    case 1: return AVCaptureColorSpace_P3_D65;
+    case 2: return AVCaptureColorSpace_HLG_BT2020;
+    case 3:
+      if (@available(iOS 16.0, *)) {
+        return AVCaptureColorSpace_appleLog;
+      } else {
+        return AVCaptureColorSpace_sRGB;
+      }
+    default: return AVCaptureColorSpace_sRGB;
+  }
+}
 
 @implementation VideoController
 
@@ -31,9 +48,10 @@ FourCharCode const videoFormat = kCVPixelFormatType_32BGRA;
   AVVideoCodecType codecType = [self getBestCodecTypeAccordingOptions:options];
   
   // Configure color space with respect to the codec
-  if (options && options != (id)[NSNull null] && options.colorSpace != CupertinoColorSpaceSRGB) {
+  if (options && options != (id)[NSNull null] && options.colorSpace >= 0 && options.colorSpace <= 4) {
+    // Use direct integer value instead of enum
     [self configureColorSpaceForRecording:device 
-                               colorSpace:options.colorSpace
+                            colorSpaceInt:options.colorSpace
                                     codec:codecType];
   }
   
@@ -409,21 +427,7 @@ FourCharCode const videoFormat = kCVPixelFormatType_32BGRA;
 
 // Convert CupertinoColorSpace to AVCaptureColorSpace
 - (AVCaptureColorSpace)convertToAVCaptureColorSpace:(CupertinoColorSpace)colorSpace {
-  switch (colorSpace) {
-    case CupertinoColorSpaceP3D65:
-      return AVCaptureColorSpace_P3_D65;
-    case CupertinoColorSpaceHlgBT2020:
-      return AVCaptureColorSpace_HLG_BT2020;
-    case CupertinoColorSpaceAppleLog:
-      if (@available(iOS 16.0, *)) {
-        return AVCaptureColorSpace_appleLog;
-      } else {
-        return AVCaptureColorSpace_sRGB;
-      }
-    case CupertinoColorSpaceSRGB:
-    default:
-      return AVCaptureColorSpace_sRGB;
-  }
+  return colorSpaceFromInt(colorSpace);
 }
 
 // Check if a device format supports a specific color space
@@ -441,14 +445,14 @@ FourCharCode const videoFormat = kCVPixelFormatType_32BGRA;
 
 // Configure color space for recording
 - (void)configureColorSpaceForRecording:(AVCaptureDevice *)device 
-                             colorSpace:(CupertinoColorSpace)colorSpace
+                             colorSpaceInt:(NSInteger)colorSpaceInt
                                   codec:(AVVideoCodecType)codecType {
-  if (colorSpace == nil) {
+  if (colorSpace <  0 || colorSpace > 4) {
     // Use default if not specified
     return;
   }
   
-  AVCaptureColorSpace avColorSpace = [self convertToAVCaptureColorSpace:colorSpace];
+  AVCaptureColorSpace avColorSpace = colorSpaceFromInt(colorSpaceInt);
   
   // Check if the device format supports the color space
   if (![self deviceFormat:device.activeFormat supportsColorSpace:avColorSpace]) {

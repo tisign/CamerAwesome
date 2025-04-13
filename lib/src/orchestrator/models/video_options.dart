@@ -54,26 +54,6 @@ enum CupertinoFileType {
   type3GPP2,
 }
 
-enum CupertinoColorSpace {
-  /// The standard RGB color space.
-  ///
-  /// This is the default color space.
-  sRGB,
-
-  /// The P3 D65 wide color space.
-  p3D65,
-
-  /// The BT.2020 wide color space with HLG transfer function.
-  ///
-  /// This color space is used for HDR video.
-  hlgBT2020,
-
-  /// The Apple Log Color space with BT2020 primaries.
-  ///
-  /// This color space is used for HDR video.
-  appleLog,
-}
-
 class CupertinoVideoOptions {
   /// The video codec to use when recording a video.
   CupertinoVideoCodec codec;
@@ -86,7 +66,7 @@ class CupertinoVideoOptions {
   int? fps;
 
   /// The color space to use when recording a video.
-  CupertinoColorSpace? colorSpace;
+  int? colorSpace;
 
   CupertinoVideoOptions({
     this.codec = CupertinoVideoCodec.h264,
@@ -100,7 +80,7 @@ class CupertinoVideoOptions {
       'codec': codec.name,
       'fileType': fileType.name,
       'fps': fps,
-      'colorSpace': colorSpace?.name,
+      'colorSpace': colorSpace,
     };
   }
 }
