@@ -6,6 +6,7 @@
 //
 
 #import "VideoController.h"
+#import "ColorSpaceUtils.h"
 
 FourCharCode const videoFormat = kCVPixelFormatType_32BGRA;
 
@@ -26,6 +27,17 @@ FourCharCode const videoFormat = kCVPixelFormatType_32BGRA;
 - (void)recordVideoAtPath:(NSString *)path captureDevice:(AVCaptureDevice *)device orientation:(NSInteger)orientation audioSetupCallback:(OnAudioSetup)audioSetupCallback videoWriterCallback:(OnVideoWriterSetup)videoWriterCallback options:(CupertinoVideoOptions *)options quality:(VideoRecordingQuality)quality completion:(nonnull void (^)(FlutterError * _Nullable))completion {
   _options = options;
   _recordingQuality = quality;
+
+  if (options) {
+    CGSize videoSize = [self getBestVideoSizeAccordingQuality:quality];
+    float fps = options.fps ? [options.fps floatValue] : 30.0f;
+    
+    // If color space is specified, configure it
+    if (options.colorSpace != nil) {
+      CupertinoColorSpace colorSpace = options.colorSpace;
+      [self setColorSpaceForRecording:colorSpace captureDevice:device format:videoSize fps:fps];
+    }
+  }
   
   // Create audio & video writer
   if (![self setupWriterForPath:path audioSetupCallback:audioSetupCallback options:options completion:completion]) {
@@ -219,6 +231,24 @@ FourCharCode const videoFormat = kCVPixelFormatType_32BGRA;
       [_captureDevice unlockForConfiguration];
     }
   }
+}
+
+
+
+- (void)setColorSpaceForRecording:(CupertinoColorSpace)preferredColorSpace 
+                    captureDevice:(AVCaptureDevice *)device 
+                           format:(CGSize)resolution 
+                              fps:(float)fps {
+  // Use our utility class to configure the device
+  [ColorSpaceUtils configureDevice:device
+                   withColorSpace:preferredColorSpace
+                       resolution:resolution
+                              fps:fps
+                   captureSession:device.session];
+}
+
+- (void)logDeviceFormats:(AVCaptureDevice *)device {
+  [ColorSpaceUtils logAvailableFormatsForDevice:device];
 }
 
 # pragma mark - Camera Delegates

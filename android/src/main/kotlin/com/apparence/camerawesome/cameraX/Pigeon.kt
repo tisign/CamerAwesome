@@ -126,6 +126,18 @@ enum class CupertinoCodecType(val raw: Int) {
   }
 }
 
+enum class CupertinoColorSpace(val raw: Int) {
+  SRGB(0),
+  HLGBT2020(1),
+  APPLELOG(2);
+
+  companion object {
+    fun ofRaw(raw: Int): CupertinoColorSpace? {
+      return values().firstOrNull { it.raw == raw }
+    }
+  }
+}
+
 enum class PigeonSensorType(val raw: Int) {
   /**
    * A built-in wide-angle camera.
@@ -333,7 +345,8 @@ data class CupertinoVideoOptions (
   /** Specify video codec, defaults to [AVVideoCodecTypeH264]. */
   val codec: CupertinoCodecType? = null,
   /** Specify video fps, defaults to [30]. */
-  val fps: Long? = null
+  val fps: Long? = null,
+  val colorSpace: CupertinoColorSpace? = null
 
 ) {
   companion object {
@@ -346,7 +359,10 @@ data class CupertinoVideoOptions (
         CupertinoCodecType.ofRaw(it)
       }
       val fps = list[2].let { if (it is Int) it.toLong() else it as Long? }
-      return CupertinoVideoOptions(fileType, codec, fps)
+      val colorSpace: CupertinoColorSpace? = (list[3] as Int?)?.let {
+        CupertinoColorSpace.ofRaw(it)
+      }
+      return CupertinoVideoOptions(fileType, codec, fps, colorSpace)
     }
   }
   fun toList(): List<Any?> {
@@ -354,6 +370,7 @@ data class CupertinoVideoOptions (
       fileType?.raw,
       codec?.raw,
       fps,
+      colorSpace?.raw,
     )
   }
 }

@@ -112,6 +112,8 @@ enum CupertinoCodecType {
   appleProRes422Proxy,
 }
 
+enum CupertinoColorSpace { sRGB, hlgBt2020, appleLog }
+
 class CupertinoVideoOptions {
   /// Specify video file type, defaults to [AVFileTypeQuickTimeMovie].
   final CupertinoFileType? fileType;
@@ -122,10 +124,13 @@ class CupertinoVideoOptions {
   /// Specify video fps, defaults to [30].
   final int? fps;
 
+  final CupertinoColorSpace? colorSpace;
+
   CupertinoVideoOptions({
     this.fileType,
     this.codec,
     this.fps,
+    this.colorSpace,
   });
 }
 

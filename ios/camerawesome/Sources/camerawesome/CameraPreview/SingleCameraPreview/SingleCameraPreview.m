@@ -6,6 +6,7 @@
 //
 
 #import "SingleCameraPreview.h"
+#import "ColorSpaceUtils.h"
 
 @implementation SingleCameraPreview {
   dispatch_queue_t _dispatchQueue;
@@ -72,9 +73,35 @@
   }
   
   [self setBestPreviewQuality];
+
+  // Configure color space if present in video options
+  if (videoOptions && videoOptions.colorSpace != nil) {
+    [self configureColorSpaceWithOptions:videoOptions];
+  }
   
   return self;
 }
+
+- (void)configureColorSpaceWithOptions:(CupertinoVideoOptions *)options {
+  if (!options.colorSpace) {
+    return;
+  }
+  
+  // Get the desired fps (default to 30 if not specified)
+  float fps = options.fps ? [options.fps floatValue] : 30.0f;
+  
+  // Get the current resolution
+  CGSize resolution = [self getEffectivPreviewSize];
+  
+  // Use our utility class to configure the device
+  [ColorSpaceUtils configureDevice:_captureDevice
+                   withColorSpace:options.colorSpace
+                       resolution:resolution
+                              fps:fps
+                   captureSession:_captureSession];
+}
+
+
 
 - (void)setAspectRatio:(AspectRatio)ratio {
   _aspectRatio = ratio;

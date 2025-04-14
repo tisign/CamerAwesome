@@ -54,6 +54,12 @@ enum CupertinoFileType {
   type3GPP2,
 }
 
+enum CupertinoColorSpace {
+  sRGB,
+  hlgBt2020,
+  appleLog,
+}
+
 class CupertinoVideoOptions {
   /// The video codec to use when recording a video.
   CupertinoVideoCodec codec;
@@ -65,10 +71,13 @@ class CupertinoVideoOptions {
 
   int? fps;
 
+  CupertinoColorSpace? colorSpace;
+
   CupertinoVideoOptions({
     this.codec = CupertinoVideoCodec.h264,
     this.fileType = CupertinoFileType.quickTimeMovie,
     this.fps,
+    this.colorSpace,
   });
 
   Map<String, dynamic> toMap() {
@@ -76,6 +85,7 @@ class CupertinoVideoOptions {
       'codec': codec.name,
       'fileType': fileType.name,
       'fps': fps,
+      'colorSpace': colorSpace?.name,
     };
   }
 }

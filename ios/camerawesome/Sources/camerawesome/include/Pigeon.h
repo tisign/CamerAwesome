@@ -59,6 +59,12 @@ typedef NS_ENUM(NSUInteger, CupertinoCodecType) {
   CupertinoCodecTypeAppleProRes422Proxy = 8,
 };
 
+typedef NS_ENUM(NSUInteger, CupertinoColorSpace) {
+  CupertinoColorSpaceSRGB = 0,
+  CupertinoColorSpaceHlgBt2020 = 1,
+  CupertinoColorSpaceAppleLog = 2,
+};
+
 typedef NS_ENUM(NSUInteger, PigeonSensorType) {
   /// A built-in wide-angle camera.
   ///
@@ -164,13 +170,15 @@ typedef NS_ENUM(NSUInteger, AnalysisRotation) {
 @interface CupertinoVideoOptions : NSObject
 + (instancetype)makeWithFileType:(CupertinoFileType)fileType
     codec:(CupertinoCodecType)codec
-    fps:(nullable NSNumber *)fps;
+    fps:(nullable NSNumber *)fps
+    colorSpace:(CupertinoColorSpace)colorSpace;
 /// Specify video file type, defaults to [AVFileTypeQuickTimeMovie].
 @property(nonatomic, assign) CupertinoFileType fileType;
 /// Specify video codec, defaults to [AVVideoCodecTypeH264].
 @property(nonatomic, assign) CupertinoCodecType codec;
 /// Specify video fps, defaults to [30].
 @property(nonatomic, strong, nullable) NSNumber * fps;
+@property(nonatomic, assign) CupertinoColorSpace colorSpace;
 @end
 
 @interface PigeonSensorTypeDevice : NSObject
