@@ -104,7 +104,7 @@ FourCharCode const videoFormat = kCVPixelFormatType_32BGRA;
   if (_isAudioEnabled && !_isAudioSetup) {
     audioSetupCallback();
   }
-  NSLog(@"[CameraAwesome] Color space before writer setup: %ld", (long)_captureDevice.activeColorSpace);
+  printf(@"[CameraAwesome] Color space before writer setup: %ld", (long)_captureDevice.activeColorSpace);
   // Read from options if available
   AVVideoCodecType codecType = [self getBestCodecTypeAccordingOptions:options];
   AVFileType fileType = [self getBestFileTypeAccordingOptions:options];
@@ -158,7 +158,7 @@ FourCharCode const videoFormat = kCVPixelFormatType_32BGRA;
     [_videoWriter addInput:_audioWriterInput];
   }
 
-  NSLog(@"[CameraAwesome] Color space after writer setup: %ld", (long)_captureDevice.activeColorSpace);
+  printf(@"[CameraAwesome] Color space after writer setup: %ld", (long)_captureDevice.activeColorSpace);
   
   return YES;
 }
@@ -447,44 +447,44 @@ FourCharCode const videoFormat = kCVPixelFormatType_32BGRA;
                              colorSpace:(CupertinoColorSpace)colorSpace
                                   codec:(AVVideoCodecType)codecType {
   if (colorSpace == nil) {
-    NSLog(@"[CameraAwesome] No color space specified, using default");
+    printf(@"[CameraAwesome] No color space specified, using default");
     return;
   }
   
   AVCaptureColorSpace avColorSpace = [self convertToAVCaptureColorSpace:colorSpace];
-  NSLog(@"[CameraAwesome] Attempting to set color space: %ld for codec: %@", (long)avColorSpace, codecType);
+  printf(@"[CameraAwesome] Attempting to set color space: %ld for codec: %@", (long)avColorSpace, codecType);
   
   // Check current color space before changing
-  NSLog(@"[CameraAwesome] Current color space before change: %ld", (long)device.activeColorSpace);
+  printf(@"[CameraAwesome] Current color space before change: %ld", (long)device.activeColorSpace);
   
   // Check if the device format supports the color space
   if (![self deviceFormat:device.activeFormat supportsColorSpace:avColorSpace]) {
-    NSLog(@"[CameraAwesome] Device format does not support requested color space %ld", (long)avColorSpace);
+    printf(@"[CameraAwesome] Device format does not support requested color space %ld", (long)avColorSpace);
     avColorSpace = [self findCompatibleColorSpace:device.activeFormat 
                                 originalColorSpace:avColorSpace
                                             codec:codecType];
-    NSLog(@"[CameraAwesome] Using compatible color space instead: %ld", (long)avColorSpace);
+    printf(@"[CameraAwesome] Using compatible color space instead: %ld", (long)avColorSpace);
   } else {
-    NSLog(@"[CameraAwesome] Device format supports requested color space");
+    printf(@"[CameraAwesome] Device format supports requested color space");
     // Check codec compatibility with color space
     if (![self isColorSpaceCompatibleWithCodec:avColorSpace codec:codecType]) {
-      NSLog(@"[CameraAwesome] Color space not compatible with codec");
+      printf(@"[CameraAwesome] Color space not compatible with codec");
       avColorSpace = [self findCompatibleColorSpaceForCodec:device.activeFormat codec:codecType];
-      NSLog(@"[CameraAwesome] Using codec-compatible color space: %ld", (long)avColorSpace);
+      printf(@"[CameraAwesome] Using codec-compatible color space: %ld", (long)avColorSpace);
     }
   }
   
   // Set the color space
   NSError *error = nil;
   if ([device lockForConfiguration:&error]) {
-    NSLog(@"[CameraAwesome] Device locked for configuration");
+    printf(@"[CameraAwesome] Device locked for configuration");
     device.activeColorSpace = avColorSpace;
     [device unlockForConfiguration];
-    NSLog(@"[CameraAwesome] Color space set and device unlocked");
+    printf(@"[CameraAwesome] Color space set and device unlocked");
     // Verify the change was applied
-    NSLog(@"[CameraAwesome] Color space after setting: %ld", (long)device.activeColorSpace);
+    printf(@"[CameraAwesome] Color space after setting: %ld", (long)device.activeColorSpace);
   } else {
-    NSLog(@"[CameraAwesome] Failed to lock device for configuration: %@", error);
+    printf(@"[CameraAwesome] Failed to lock device for configuration: %@", error);
   }
 }
 
